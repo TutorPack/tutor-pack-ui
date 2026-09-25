@@ -9,7 +9,7 @@
     <PackageTags>blazor;razor-components;material-design;ui</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/TutorPack/ui</RepositoryUrl>
+    <RepositoryUrl>https://github.com/TutorPack/tutor-pack-ui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

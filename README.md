@@ -28,7 +28,7 @@ dotnet add package TutorPack.UI --version 1.0.0
 
 Основной код продукта находится в репозитории
 [`TutorPack/tutor-pack`](https://github.com/TutorPack/tutor-pack), документация —
-в [`TutorPack/docs`](https://github.com/TutorPack/docs).
+в [`TutorPack/tutor-pack-docs`](https://github.com/TutorPack/tutor-pack-docs).
 
 ## Сборка
 
