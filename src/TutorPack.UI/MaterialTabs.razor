@@ -1,0 +1,23 @@
+@typeparam TValue
+
+@if (Options.Count > 1)
+{
+    <div class="tp-tabs" role="tablist" aria-label="@Label">
+        @for (var index = 0; index < Options.Count; index++)
+        {
+            var tabIndex = index;
+            var option = Options[index];
+            <button type="button" role="tab" id="@option.Id" aria-controls="@option.PanelId" @key="option.Id"
+                    aria-selected="@(IsSelected(option) ? "true" : "false")"
+                    tabindex="@(IsSelected(option) ? 0 : -1)" @ref="_elements[option.Id]"
+                    @onkeydown="args => HandleKeyAsync(args, tabIndex)"
+                    @onclick="() => ValueChanged.InvokeAsync(option.Value)">
+                @option.Label
+                @if (option.Count is { } count)
+                {
+                    <span class="tp-tab-count">@count</span>
+                }
+            </button>
+        }
+    </div>
+}

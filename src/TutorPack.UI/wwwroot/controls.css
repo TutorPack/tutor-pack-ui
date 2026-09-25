@@ -1,0 +1,56 @@
+/* Shared controls follow the application's palette; Admin uses the light defaults. */
+:root, [data-theme] {
+    --tp-primary:var(--color-primary, #12579a);
+    --tp-primary-container:var(--color-primary-container, #e2edf9);
+    --tp-text:var(--color-text-primary, #17202a);
+    --tp-text-secondary:var(--color-text-secondary, #617080);
+    --tp-outline:var(--color-outline, #d7dee7);
+    --tp-field-surface:var(--color-field-surface, #eef2f6);
+    --tp-scrollbar-thumb:color-mix(in srgb, var(--tp-text-secondary) 60%, transparent);
+}
+
+/* Only appearance is shared. Each screen owns its scrolling region and height. */
+* { scrollbar-width:thin;scrollbar-color:var(--tp-scrollbar-thumb) transparent }
+*::-webkit-scrollbar { width:8px;height:8px }
+*::-webkit-scrollbar-track { background:transparent }
+*::-webkit-scrollbar-thumb { background:var(--tp-scrollbar-thumb);border-radius:999px }
+
+@media (forced-colors:active) {
+    * { scrollbar-color:auto }
+}
+
+/* Input and select share one outline, label geometry and focus treatment. */
+.tp-field, .material-select { --tp-control-surface:var(--color-field-surface,var(--surface,#fff));min-width:0;position:relative }
+.tp-field { align-self:start }
+.tp-field > .tp-field-label, .material-select > .tp-field-label { position:absolute;z-index:2;top:-7px;left:14px;max-width:calc(100% - 28px);padding:0 6px;overflow:hidden;color:var(--tp-text-secondary);background:transparent;font-size:.69rem;font-weight:700;line-height:1.4;letter-spacing:.02em;text-overflow:ellipsis;white-space:nowrap }
+.tp-field.tp-field-with-icon > .tp-field-label, .material-select > .tp-field-label { left:52px;max-width:calc(100% - 66px) }
+.tp-field-body { position:relative;min-width:0 }
+.tp-field-control, .material-select .material-select-trigger { box-sizing:border-box;width:100%;min-width:0;min-height:60px;margin:0;padding:8px 14px;color:var(--tp-text);background:var(--tp-control-surface);border:1px solid transparent;border-radius:15px;outline:0;font:inherit;font-size:.88rem;line-height:1.5;transition:border-color .16s,box-shadow .16s,background .16s }
+.tp-field-control:hover:not(:disabled), .material-select .material-select-trigger:hover:not(:disabled) { background:var(--color-surface-container-low,#f9fbfe) }
+.tp-field-control:focus, .material-select.open .material-select-trigger, .material-select .material-select-trigger:focus-visible { padding:8px 14px;border:1px solid transparent;box-shadow:0 0 0 3px color-mix(in srgb,var(--tp-primary) 12%,transparent) }
+.tp-field:focus-within > .tp-field-label, .material-select.open > .tp-field-label { color:var(--tp-primary) }
+.tp-field-control:disabled { opacity:.55;cursor:not-allowed }
+.tp-field-control[readonly] { color:var(--tp-text-secondary) }
+.tp-field-control::placeholder { color:var(--tp-text-secondary);opacity:1 }
+
+.tp-field-icon { position:absolute;z-index:1;left:14px;top:15px;width:30px;height:30px;display:grid;place-items:center;color:var(--tp-primary);pointer-events:none }
+.tp-field-icon svg { width:23px;height:23px }
+.tp-field-with-icon .tp-field-control, .tp-field-with-icon .tp-field-control:focus { padding-left:56px }
+textarea.tp-field-control { display:block;min-height:100px;padding-top:16px;resize:vertical }
+textarea.tp-field-control:focus { padding-top:16px }
+.tp-field-hint { padding:5px 4px 0;color:var(--tp-text-secondary);font-size:.75rem;line-height:1.4 }
+.tp-field-hint .validation-message { color:var(--color-error,#a23c4c) }
+@media(forced-colors:active) {
+    .tp-field-control:focus, .material-select .material-select-trigger:focus-visible { outline:2px solid Highlight;outline-offset:2px }
+}
+
+.tp-field-outline { position:absolute;z-index:1;inset:-7px 0 0;min-width:0;margin:0;padding:0 14px;border:1px solid var(--color-outline,#aeb9c6);border-radius:15px;pointer-events:none }
+.tp-field-outline legend { display:table;width:auto;max-width:100%;height:14px;padding:0;overflow:hidden;font-size:.69rem;font-weight:700;line-height:1.4;letter-spacing:.02em;white-space:nowrap }
+.tp-field-outline legend span { padding:0 6px;opacity:0 }
+.tp-field-with-icon .tp-field-outline, .material-select > .tp-field-outline { padding-left:52px }
+.tp-field-body:hover > .tp-field-outline, .material-select:has(> .material-select-trigger:hover) > .tp-field-outline { border-color:var(--tp-text-secondary) }
+.tp-field-body:focus-within > .tp-field-outline, .material-select.open > .tp-field-outline, .material-select:has(> .material-select-trigger:focus-visible) > .tp-field-outline { border-color:var(--tp-primary);border-width:2px }
+.tp-field-body:has(> [aria-invalid="true"]) > .tp-field-outline { border-color:var(--color-error,#a23c4c) }
+.tp-field-body:has(> :disabled) > .tp-field-outline { opacity:.55 }
+.material-select.icon-only .material-select-trigger { border-color:var(--color-outline,#aeb9c6) }
+.material-select.icon-only .material-select-trigger:focus-visible { border-color:var(--tp-primary) }

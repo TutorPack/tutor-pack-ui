@@ -1,0 +1,45 @@
+@using Microsoft.AspNetCore.Components.Forms
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class="tp-field @(LeadingIcon.HasValue ? "tp-field-with-icon" : null) @Class">
+    <label class="tp-field-label" for="@InputId">@Label</label>
+    <div class="tp-field-body">
+        <fieldset class="tp-field-outline" aria-hidden="true"><legend><span>@Label</span></legend></fieldset>
+        @if (LeadingIcon is { } icon)
+        {
+            <span class="tp-field-icon" aria-hidden="true"><AppIcon Name="icon" /></span>
+        }
+        @if (Multiline)
+        {
+            <textarea @attributes="AdditionalAttributes" id="@InputId" name="@NameAttributeValue"
+                      class="tp-field-control @CssClass" value="@CurrentValueAsString"
+                      aria-describedby="@DescriptionId" aria-invalid="@Invalid.ToString().ToLowerInvariant()"
+                      @onchange="Change" @oninput="Input"></textarea>
+        }
+        else
+        {
+            <input @attributes="AdditionalAttributes" id="@InputId" name="@NameAttributeValue" type="@Type"
+                   class="tp-field-control @CssClass" value="@CurrentValueAsString"
+                   aria-describedby="@DescriptionId" aria-invalid="@Invalid.ToString().ToLowerInvariant()"
+                   @onchange="Change" @oninput="Input" />
+        }
+    </div>
+    @if (Hint is not null || Invalid)
+    {
+        <div id="@DescriptionId" class="tp-field-hint">
+            @if (EditContext is not null)
+            {
+                <ValidationMessage For="ValueExpression" />
+            }
+            else if (_parseError is not null)
+            {
+                <span class="validation-message" role="alert">@_parseError</span>
+            }
+            @if (Hint is not null)
+            {
+                <span>@Hint</span>
+            }
+        </div>
+    }
+</div>

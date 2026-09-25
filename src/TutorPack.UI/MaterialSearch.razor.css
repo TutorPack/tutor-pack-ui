@@ -1,0 +1,6 @@
+.tp-search { box-sizing:border-box;min-width:0;min-height:48px;padding:0 13px;display:flex;align-items:center;gap:9px;color:var(--tp-text-secondary);background:var(--tp-field-surface);border:1px solid var(--tp-outline);border-radius:14px }
+.tp-search:focus-within { border-color:var(--tp-primary);outline:2px solid var(--tp-primary);outline-offset:1px }
+.tp-search ::deep svg { width:20px;height:20px;flex:none }
+.tp-search input { box-sizing:border-box;min-width:0;width:100%;min-height:48px;padding:0;color:var(--tp-text);background:transparent;border:0;border-radius:0;outline:0;font:inherit;font-size:14px;line-height:1.5 }
+.tp-search input::placeholder { color:var(--tp-text-secondary);opacity:1 }
+.tp-search.is-disabled { opacity:.6 }

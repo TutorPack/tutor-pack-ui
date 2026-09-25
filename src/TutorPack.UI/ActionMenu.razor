@@ -1,0 +1,46 @@
+<div class="action-menu">
+    <button type="button" class="action-menu-trigger" aria-label="Дополнительные действия"
+            aria-haspopup="menu" aria-expanded="@_open" @onclick="Toggle">
+        <AppIcon Name="AppIconName.MoreHorizontal" />
+    </button>
+    @if (_open)
+    {
+        <button type="button" class="action-menu-scrim" aria-label="Закрыть меню" @onclick="Close"></button>
+        <section class="action-menu-surface" role="menu" aria-label="Действия с занятием">
+            <header><strong>Действия с занятием</strong><button type="button" aria-label="Закрыть" @onclick="Close"><AppIcon Name="AppIconName.Close" /></button></header>
+            <div class="action-menu-items">
+                @foreach (var item in Items.Where(item => !item.IsDestructive))
+                {
+                    <button type="button" role="menuitem" @onclick="() => SelectAsync(item)"><AppIcon Name="item.Icon" /><span>@item.Label</span></button>
+                }
+                @if (Items.Any(item => item.IsDestructive))
+                {
+                    <div class="action-menu-divider"></div>
+                    @foreach (var item in Items.Where(item => item.IsDestructive))
+                    {
+                        <button type="button" class="destructive" role="menuitem" @onclick="() => SelectAsync(item)"><AppIcon Name="item.Icon" /><span>@item.Label</span></button>
+                    }
+                }
+            </div>
+        </section>
+    }
+</div>
+
+@code {
+    private bool _open;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ActionMenuItem> Items { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<string> ActionSelected { get; set; }
+
+    private void Toggle() => _open = !_open;
+    private void Close() => _open = false;
+
+    private async Task SelectAsync(ActionMenuItem item)
+    {
+        _open = false;
+        await ActionSelected.InvokeAsync(item.Id);
+    }
+}

@@ -1,0 +1,47 @@
+<svg class="@CssClass" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <use href="@Href"></use>
+</svg>
+
+@code {
+    [Parameter, EditorRequired]
+    public AppIconName Name { get; set; }
+
+    [Parameter]
+    public string? CssClass { get; set; }
+
+    private string Href => $"{Assets["_content/TutorPack.UI/icons.svg"]}#{Name switch
+    {
+        AppIconName.ArrowBack => "arrow-back",
+        AppIconName.Bell => "bell",
+        AppIconName.Calendar => "calendar",
+        AppIconName.Camera => "camera",
+        AppIconName.Check => "check",
+        AppIconName.Copy => "copy",
+        AppIconName.ChevronDown => "chevron-down",
+        AppIconName.ChevronRight => "chevron-right",
+        AppIconName.Clock => "clock",
+        AppIconName.Close => "close",
+        AppIconName.Home => "home",
+        AppIconName.Location => "location",
+        AppIconName.Import => "import",
+        AppIconName.Lock => "lock",
+        AppIconName.Logout => "logout",
+        AppIconName.MoreHorizontal => "more-horizontal",
+        AppIconName.Reschedule => "reschedule",
+        AppIconName.Delete => "delete",
+        AppIconName.Profile => "profile",
+        AppIconName.Search => "search",
+        AppIconName.Scan => "scan",
+        AppIconName.ShieldCheck => "shield-check",
+        AppIconName.Sparkles => "sparkles",
+        AppIconName.Settings => "settings",
+        AppIconName.Sun => "sun",
+        AppIconName.Moon => "moon",
+        AppIconName.Student => "student",
+        AppIconName.Teacher => "teacher",
+        AppIconName.Groups => "groups",
+        AppIconName.Plus => "plus",
+        AppIconName.Minus => "minus",
+        _ => throw new ArgumentOutOfRangeException(nameof(Name), Name, null)
+    }}";
+}

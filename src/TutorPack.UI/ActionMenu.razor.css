@@ -1,0 +1,14 @@
+.action-menu{position:relative;min-width:0}
+.action-menu-trigger{width:40px;height:40px;padding:0;display:grid;place-items:center;color:var(--color-text-secondary,#617080);background:var(--color-surface-container,#eef2f6);border:0;border-radius:20px;cursor:pointer;transition:color .15s,background .15s,transform .1s}
+.action-menu-trigger:hover,.action-menu-trigger[aria-expanded=true]{color:var(--color-primary,#12579a);background:var(--color-primary-container,#e2edf9)}
+.action-menu-trigger:focus-visible{outline:2px solid rgba(18,87,154,.35);outline-offset:2px}
+.action-menu-trigger:active{transform:scale(.94)}.action-menu-trigger svg{width:20px;height:20px}
+.action-menu-scrim{position:fixed;z-index:89;inset:0;padding:0;background:transparent;border:0}
+.action-menu-surface{position:absolute;z-index:90;top:calc(100% + 7px);left:0;width:248px;max-width:calc(100vw - 32px);padding:6px;background:var(--color-surface,#fff);border:1px solid var(--color-outline,#d7dee7);border-radius:var(--radius-md,14px);box-shadow:0 10px 30px rgba(17,38,59,.16)}
+.action-menu-surface header{display:none}
+.action-menu-items{display:grid;gap:2px}
+.action-menu-items button{width:100%;min-height:44px;padding:9px 12px;display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;gap:10px;color:var(--color-text-primary,#17202a);text-align:left;background:transparent;border:0;border-radius:var(--radius-sm,9px);font:inherit;font-size:.76rem;font-weight:600;line-height:1.35;cursor:pointer}
+.action-menu-items button:hover,.action-menu-items button:focus-visible{background:var(--color-surface-container,#eef2f6);outline:0}
+.action-menu-items svg{width:19px;height:19px}.action-menu-divider{height:1px;margin:5px 6px;background:var(--color-outline,#d7dee7)}
+.action-menu-items .destructive{color:var(--color-error,#a43b2b)}.action-menu-items .destructive:hover{background:var(--color-error-container,#fde9e5)}
+@media(max-width:760px){.action-menu-surface{right:0;left:auto;width:min(260px,calc(100vw - 32px))}.action-menu-items button{min-height:48px;font-size:.8rem}}

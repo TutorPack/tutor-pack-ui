@@ -1,0 +1,220 @@
+@typeparam TValue where TValue : struct
+
+<div class="material-select @(_open ? "open" : null) @(IconOnly ? "icon-only" : null) @(OpenUpwards ? "opens-up" : null)">
+    <label class="tp-field-label" id="@_labelId">@Label</label>
+    <button class="material-select-trigger"
+            @ref="_trigger"
+            type="button"
+            disabled="@Disabled"
+            role="combobox"
+            aria-labelledby="@_labelId"
+            aria-description="@(IconOnly ? SelectedOption?.Label : null)"
+            title="@(IconOnly ? Label : null)"
+            aria-controls="@_listId"
+            aria-expanded="@(_open ? "true" : "false")"
+            aria-haspopup="listbox"
+            @onclick="Toggle"
+            @onkeydown="HandleTriggerKeyDown">
+        <span class="material-select-leading" aria-hidden="true">
+            <AppIcon Name="LeadingIcon" />
+        </span>
+        @if (!IconOnly)
+        {
+            <span class="material-select-value @(Value.HasValue ? null : "placeholder")">@(SelectedOption?.Label ?? Placeholder)</span>
+            <AppIcon Name="AppIconName.ChevronDown" CssClass="material-select-chevron" />
+        }
+    </button>
+    @if (!IconOnly)
+    {
+        <fieldset class="tp-field-outline" aria-hidden="true"><legend><span>@Label</span></legend></fieldset>
+    }
+    @if (_open)
+    {
+        <button type="button" class="material-select-scrim" aria-label="Закрыть список" @onclick="Close"></button>
+        <div class="material-select-menu" @onclick:stopPropagation @onkeydown="HandleMenuKeyDown">
+            @if (ShowSearch)
+            {
+                <div class="material-select-search">
+                    <AppIcon Name="AppIconName.Search" />
+                    <input value="@_query" @ref="_searchInput" @oninput="HandleSearch" @onkeydown="HandleKeyDown"
+                           placeholder="@SearchPlaceholder" aria-label="@SearchPlaceholder" />
+                    @if (_query.Length > 0) { <button type="button" aria-label="Очистить поиск" @onclick="ClearSearch">×</button> }
+                </div>
+            }
+            <div class="material-select-options" id="@_listId" role="listbox" aria-labelledby="@_labelId">
+                @if (FilteredOptions.Count == 0)
+                {
+                    <span class="material-select-empty">Ничего не найдено</span>
+                }
+                else
+                {
+                    @foreach (var option in FilteredOptions)
+                    {
+                        <button type="button"
+                                @ref="_optionElements[option.Value]"
+                                class="material-select-option @(IsSelected(option) ? "selected" : null)"
+                                role="option"
+                                aria-selected="@(IsSelected(option) ? "true" : "false")"
+                                @onclick="() => SelectAsync(option)">
+                            <span>@option.Label</span>
+                            @if (IsSelected(option))
+                            {
+                                <AppIcon Name="AppIconName.Check" />
+                            }
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly string _labelId = $"material-select-label-{Guid.NewGuid():N}";
+    private readonly string _listId = $"material-select-list-{Guid.NewGuid():N}";
+    private ElementReference _searchInput;
+    private ElementReference _trigger;
+    private readonly Dictionary<TValue, ElementReference> _optionElements = [];
+    private bool _open;
+    private bool _focusSearch;
+    private bool _focusOption;
+    private bool _focusTrigger;
+    private int _focusedOptionIndex;
+    private string _query = string.Empty;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MaterialSelectOption<TValue>> Options { get; set; } = [];
+
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Выберите из списка";
+
+    [Parameter]
+    public string SearchPlaceholder { get; set; } = "Поиск";
+
+    [Parameter]
+    public AppIconName LeadingIcon { get; set; } = AppIconName.Calendar;
+
+    [Parameter]
+    public bool ShowSearch { get; set; } = true;
+
+    [Parameter]
+    public bool IconOnly { get; set; }
+
+    [Parameter]
+    public bool OpenUpwards { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    private MaterialSelectOption<TValue>? SelectedOption => Options.FirstOrDefault(IsSelected);
+
+    private IReadOnlyList<MaterialSelectOption<TValue>> FilteredOptions => Options
+        .Where(option => _query.Length == 0 || option.Label.Contains(_query, StringComparison.OrdinalIgnoreCase))
+        .Take(80)
+        .ToArray();
+
+    private bool IsSelected(MaterialSelectOption<TValue> option) =>
+        Value.HasValue && EqualityComparer<TValue>.Default.Equals(option.Value, Value.Value);
+
+    private void Toggle()
+    {
+        if (_open) Close(); else Open();
+    }
+
+    private void Open()
+    {
+        if (Disabled) return;
+        _focusTrigger = false;
+        _open = true;
+        _focusSearch = ShowSearch;
+        _focusOption = !ShowSearch;
+        _focusedOptionIndex = Math.Max(0, FilteredOptions.ToList().FindIndex(IsSelected));
+    }
+
+    private void Close()
+    {
+        _open = false;
+        _focusSearch = false;
+        _focusOption = false;
+        _focusTrigger = true;
+        _query = string.Empty;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusSearch)
+        {
+            _focusSearch = false;
+            await _searchInput.FocusAsync();
+        }
+        else if (_focusOption && FilteredOptions.Count > 0)
+        {
+            _focusOption = false;
+            await _optionElements[FilteredOptions[_focusedOptionIndex].Value].FocusAsync();
+        }
+        else if (_focusTrigger)
+        {
+            _focusTrigger = false;
+            await _trigger.FocusAsync();
+        }
+    }
+
+    private void HandleSearch(ChangeEventArgs args) =>
+        _query = args.Value?.ToString() ?? string.Empty;
+
+    private void HandleTriggerKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "ArrowDown")
+            Open();
+        else if (args.Key == "Escape")
+            Close();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Escape")
+            Close();
+        else if (args.Key == "Enter" && FilteredOptions.FirstOrDefault() is { } first)
+            await SelectAsync(first);
+    }
+
+    private async Task HandleMenuKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Escape")
+            Close();
+        else if (!ShowSearch && FilteredOptions.Count > 0 && args.Key is "ArrowDown" or "ArrowUp" or "Home" or "End")
+        {
+            var count = FilteredOptions.Count;
+            _focusedOptionIndex = args.Key switch
+            {
+                "Home" => 0,
+                "End" => count - 1,
+                "ArrowUp" => (_focusedOptionIndex + count - 1) % count,
+                _ => (_focusedOptionIndex + 1) % count
+            };
+            await _optionElements[FilteredOptions[_focusedOptionIndex].Value].FocusAsync();
+        }
+    }
+
+    private void ClearSearch()
+    {
+        _query = string.Empty;
+        _focusSearch = true;
+    }
+
+    private async Task SelectAsync(MaterialSelectOption<TValue> option)
+    {
+        Value = option.Value;
+        Close();
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

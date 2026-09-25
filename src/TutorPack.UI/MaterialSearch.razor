@@ -1,0 +1,5 @@
+<label class="tp-search @(Disabled ? "is-disabled" : null)">
+    <AppIcon Name="AppIconName.Search" />
+    <input type="search" aria-label="@Label" placeholder="@Placeholder" maxlength="@MaxLength"
+           disabled="@Disabled" value="@Value" @oninput="HandleInputAsync" />
+</label>
