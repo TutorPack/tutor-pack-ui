@@ -22,6 +22,8 @@ jobs:
         run: dotnet restore TutorPack.UI.slnx
       - name: Build
         run: dotnet build TutorPack.UI.slnx --configuration Release --no-restore
+      - name: Test
+        run: dotnet test TutorPack.UI.slnx --configuration Release --no-build
       - name: Pack
         run: dotnet pack src/TutorPack.UI/TutorPack.UI.csproj --configuration Release --no-build --output artifacts
       - name: Verify package
