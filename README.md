@@ -1,7 +1,7 @@
 # TutorPack.UI
 
-Публичная Razor Class Library с общими Material Design-компонентами и статическими
-ресурсами Tutor Pack. Пакет предназначен для Blazor-приложений на .NET 10.
+Razor Class Library с общими Material Design-компонентами и статическими
+ресурсами Tutor Pack. Пакет распространяется через GitHub Packages для Blazor-приложений на .NET 10.
 
 ## Установка
 
@@ -38,6 +38,8 @@ dotnet build TutorPack.UI.slnx --configuration Release --no-restore
 dotnet pack src/TutorPack.UI/TutorPack.UI.csproj --configuration Release --no-build --output artifacts
 ```
 
-Новая версия публикуется на NuGet.org после изменения `Version` и создания тега
-`v<версия>`. Публикация использует GitHub OIDC Trusted Publishing и не хранит
-долговременный NuGet API key.
+Новая версия публикуется в GitHub Packages после изменения `Version` и создания тега
+`v<версия>`. Публикация использует `GITHUB_TOKEN` репозитория. Для установки пакета
+добавьте источник `https://nuget.pkg.github.com/TutorPack/index.json` и передайте
+учётные данные GitHub Packages через `NuGetPackageSourceCredentials_tutorpack`;
+публиковать токен в `NuGet.Config` не нужно.

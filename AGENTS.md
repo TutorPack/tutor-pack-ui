@@ -2,7 +2,7 @@
 
 Эти правила действуют для всего репозитория.
 
-- `TutorPack.UI` — публичный NuGet package и Razor Class Library для .NET 10.
+- `TutorPack.UI` — пакет GitHub Packages и Razor Class Library для .NET 10.
   Сохраняй namespace, имена компонентов, параметры и пути `_content/TutorPack.UI`
   совместимыми. Перед изменением публичного API проверяй потребителей в
   [`TutorPack/tutor-pack`](https://github.com/TutorPack/tutor-pack).
