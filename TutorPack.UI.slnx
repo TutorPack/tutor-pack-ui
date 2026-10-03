@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/TutorPack.UI/TutorPack.UI.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TutorPack.UI.Tests/TutorPack.UI.Tests.csproj" />
+  </Folder>
 </Solution>
